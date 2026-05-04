@@ -33,17 +33,19 @@
                         <button class="tab-btn" onclick="switchTab('css', event)">CSS</button>
                     </div>
                 </div>
-                <textarea id="mock-data" class="tab-content active" placeholder='{\n  "user": {\n    "name": "John Doe",\n    "role": "Admin"\n  },\n  "statusMap": {\n    "active": "Active",\n    "inactive": "Inactive"\n  },\n  "items": [\n    {"id": 1, "name": "Item 1"},\n    {"id": 2, "name": "Item 2"}\n  ]\n}'></textarea>
-                <div id="css-container" class="tab-content">
-                    <div class="css-controls">
-                        <button onclick="addCssInput()" class="add-css-btn">+ Add CSS</button>
-                    </div>
-                    <div id="css-inputs">
-                        <div class="css-item">
-                            <div class="css-item-header">
-                                <span>CSS #1</span>
+                <div class="panel-body">
+                    <textarea id="mock-data" class="tab-content active" placeholder='{\n  "user": {\n    "name": "John Doe",\n    "role": "Admin"\n  },\n  "statusMap": {\n    "active": "Active",\n    "inactive": "Inactive"\n  },\n  "items": [\n    {"id": 1, "name": "Item 1"},\n    {"id": 2, "name": "Item 2"}\n  ]\n}'></textarea>
+                    <div id="css-container" class="tab-content">
+                        <div class="css-controls">
+                            <button onclick="addCssInput()" class="add-css-btn">+ Add CSS</button>
+                        </div>
+                        <div id="css-inputs">
+                            <div class="css-item">
+                                <div class="css-item-header">
+                                    <span>CSS #1</span>
+                                </div>
+                                <textarea class="css-input" placeholder="/* Paste your CSS here */"></textarea>
                             </div>
-                            <textarea class="css-input" placeholder="/* Paste your CSS here */"></textarea>
                         </div>
                     </div>
                 </div>
