@@ -194,3 +194,98 @@ footer code {
         min-height: 400px;
     }
 }
+
+/* Multi-CSS Support */
+#css-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.css-controls {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.add-css-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.add-css-btn:hover {
+    opacity: 0.9;
+}
+
+#css-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.css-item {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.css-item-header {
+    background: #667eea;
+    color: white;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.remove-css-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+
+.remove-css-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.css-item textarea {
+    width: 100%;
+    min-height: 150px;
+    background: white;
+    border: none;
+    padding: 0.75rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    resize: vertical;
+}
+
+/* Preview Controls */
+.preview-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.generate-btn {
+    background: #10b981 !important;
+    color: white !important;
+}
+
+.generate-btn:hover {
+    background: #059669 !important;
+}

@@ -34,14 +34,29 @@
                     </div>
                 </div>
                 <textarea id="mock-data" class="tab-content active" placeholder='{\n  "user": {\n    "name": "John Doe",\n    "role": "Admin"\n  },\n  "statusMap": {\n    "active": "Active",\n    "inactive": "Inactive"\n  },\n  "items": [\n    {"id": 1, "name": "Item 1"},\n    {"id": 2, "name": "Item 2"}\n  ]\n}'></textarea>
-                <textarea id="css-input" class="tab-content" placeholder="/* Paste your CSS here or link CDN in JSP */"></textarea>
+                <div id="css-container" class="tab-content">
+                    <div class="css-controls">
+                        <button onclick="addCssInput()" class="add-css-btn">+ Add CSS</button>
+                    </div>
+                    <div id="css-inputs">
+                        <div class="css-item">
+                            <div class="css-item-header">
+                                <span>CSS #1</span>
+                            </div>
+                            <textarea class="css-input" placeholder="/* Paste your CSS here */"></textarea>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Live Preview -->
             <div class="panel">
                 <div class="panel-header">
                     <h2>Live Preview</h2>
-                    <button onclick="copyToClipboard(event)">Copy HTML</button>
+                    <div class="preview-controls">
+                        <button onclick="copyToClipboard(event)">Copy HTML</button>
+                        <button onclick="generateNewWindow()" class="generate-btn">🚀 Generate in New Window</button>
+                    </div>
                 </div>
                 <iframe id="preview-frame"></iframe>
                 <div id="error-display" class="error-display"></div>

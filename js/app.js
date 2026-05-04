@@ -6,13 +6,13 @@
 // Global state
 let evaluator, parser, renderer;
 let renderTimeout;
+let cssCounter = 1;
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
     // Get DOM elements
     const jspInput = document.getElementById('jsp-input');
     const mockDataInput = document.getElementById('mock-data');
-    const cssInput = document.getElementById('css-input');
     const previewFrame = document.getElementById('preview-frame');
     const htmlOutput = document.getElementById('html-output');
     const errorDisplay = document.getElementById('error-display');
@@ -23,7 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auto-render on input change (debounced)
     jspInput.addEventListener('input', debounceRender);
     mockDataInput.addEventListener('input', debounceRender);
-    cssInput.addEventListener('input', debounceRender);
+    
+    // Listen to CSS input changes
+    document.getElementById('css-inputs').addEventListener('input', (e) => {
+        if (e.target.classList.contains('css-input')) {
+            debounceRender();
+        }
+    });
 
     // Load example on start
     loadExample();
@@ -43,7 +49,6 @@ function debounceRender() {
 function renderPreview() {
     const jspInput = document.getElementById('jsp-input');
     const mockDataInput = document.getElementById('mock-data');
-    const cssInput = document.getElementById('css-input');
     const htmlOutput = document.getElementById('html-output');
     const errorDisplay = document.getElementById('error-display');
 
@@ -69,8 +74,11 @@ function renderPreview() {
         // Parse JSP
         const parsedHTML = parser.parse(jspInput.value);
 
+        // Collect all CSS from multiple inputs
+        const allCss = getAllCss();
+
         // Render in iframe
-        const fullHTML = renderer.render(parsedHTML, cssInput.value);
+        const fullHTML = renderer.render(parsedHTML, allCss);
 
         // Update HTML output
         htmlOutput.value = fullHTML;
@@ -85,6 +93,20 @@ function renderPreview() {
         errorDisplay.classList.add('show');
         console.error('Render error:', error);
     }
+}
+
+/**
+ * Get all CSS from multiple textareas
+ */
+function getAllCss() {
+    const cssTextareas = document.querySelectorAll('.css-input');
+    let allCss = '';
+    cssTextareas.forEach(textarea => {
+        if (textarea.value.trim()) {
+            allCss += textarea.value + '\n\n';
+        }
+    });
+    return allCss;
 }
 
 /**
@@ -151,7 +173,9 @@ function copyToClipboard(event) {
 function loadExample() {
     const jspInput = document.getElementById('jsp-input');
     const mockDataInput = document.getElementById('mock-data');
-    const cssInput = document.getElementById('css-input');
+    
+    // Get first CSS input
+    const firstCssInput = document.querySelector('.css-input');
 
     jspInput.value = `<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -250,7 +274,8 @@ function loadExample() {
   ]
 }`;
 
-    cssInput.value = `/* Custom styles */
+    if (firstCssInput) {
+        firstCssInput.value = `/* Custom styles */
 .container {
     max-width: 960px;
 }
@@ -265,6 +290,58 @@ h1 {
     border-radius: 8px;
     overflow: hidden;
 }`;
+    }
 
     renderPreview();
+}
+
+/**
+ * Add CSS input
+ */
+function addCssInput() {
+    cssCounter++;
+    const cssInputsContainer = document.getElementById('css-inputs');
+    
+    const cssItem = document.createElement('div');
+    cssItem.className = 'css-item';
+    cssItem.innerHTML = `
+        <div class="css-item-header">
+            <span>CSS #${cssCounter}</span>
+            <button class="remove-css-btn" onclick="removeCssInput(this)">✕ Remove</button>
+        </div>
+        <textarea class="css-input" placeholder="/* Paste your CSS here */"></textarea>
+    `;
+    
+    cssInputsContainer.appendChild(cssItem);
+}
+
+/**
+ * Remove CSS input
+ */
+function removeCssInput(btn) {
+    const cssItem = btn.closest('.css-item');
+    cssItem.remove();
+    debounceRender();
+}
+
+/**
+ * Generate in new window
+ */
+function generateNewWindow() {
+    const htmlOutput = document.getElementById('html-output');
+    
+    if (!htmlOutput.value.trim()) {
+        alert('Nothing to generate! Please add JSP code first.');
+        return;
+    }
+    
+    // Open in new window
+    const newWindow = window.open('', '_blank', 'width=1200,height=800');
+    
+    if (newWindow) {
+        newWindow.document.write(htmlOutput.value);
+        newWindow.document.close();
+    } else {
+        alert('Pop-up blocked! Please allow pop-ups for this site.');
+    }
 }
