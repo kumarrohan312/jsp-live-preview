@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSP Live Preview</title>
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+    <header>
+        <h1>🚀 JSP Live Preview - Full Mode</h1>
+        <p>Edit JSP with JSTL/EL → See rendered HTML instantly | <a href="visual-mode.html" style="color: white; text-decoration: underline;">Quick Visual Mode →</a></p>
+        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.9); margin-top: 5px;">Created by: <strong style="color: #ffd700;">Rohan Sharma</strong></p>
+    </header>
+
+    <main class="container">
+        <div class="editor-grid">
+            <!-- JSP Input -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>JSP Code</h2>
+                    <button onclick="loadExample()">Load Example</button>
+                </div>
+                <textarea id="jsp-input" placeholder="Paste your JSP code here..."></textarea>
+            </div>
+
+            <!-- Mock Data + CSS -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Configuration</h2>
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab('mock-data', event)">Mock Data</button>
+                        <button class="tab-btn" onclick="switchTab('css', event)">CSS</button>
+                    </div>
+                </div>
+                <textarea id="mock-data" class="tab-content active" placeholder='{\n  "user": {\n    "name": "John Doe",\n    "role": "Admin"\n  },\n  "statusMap": {\n    "active": "Active",\n    "inactive": "Inactive"\n  },\n  "items": [\n    {"id": 1, "name": "Item 1"},\n    {"id": 2, "name": "Item 2"}\n  ]\n}'></textarea>
+                <textarea id="css-input" class="tab-content" placeholder="/* Paste your CSS here or link CDN in JSP */"></textarea>
+            </div>
+
+            <!-- Live Preview -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Live Preview</h2>
+                    <button onclick="copyToClipboard(event)">Copy HTML</button>
+                </div>
+                <iframe id="preview-frame"></iframe>
+                <div id="error-display" class="error-display"></div>
+            </div>
+        </div>
+
+        <!-- Rendered HTML Source (Hidden) -->
+        <div class="panel full-width" style="margin-top: 20px;">
+            <div class="panel-header">
+                <h2>Rendered HTML Source</h2>
+                <button onclick="toggleHtmlSource()">Show/Hide</button>
+            </div>
+            <textarea id="html-output" style="display: none;" readonly></textarea>
+        </div>
+    </main>
+
+    <footer>
+        <p>Supports: <code>&lt;c:if&gt;</code>, <code>&lt;c:forEach&gt;</code>, <code>&lt;c:out&gt;</code>, <code>&lt;c:choose&gt;</code> | EL: <code>${bean.field}</code>, <code>${map['key']}</code></p>
+    </footer>
+
+    <script src="js/el-evaluator.js"></script>
+    <script src="js/jsp-parser.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

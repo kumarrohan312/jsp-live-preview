@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSP Visual Preview - Layout & Styling</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            min-height: calc(100vh - 160px);
+        }
+
+        .input-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-panel h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .input-panel textarea {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: none;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .preview-panel {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-content {
+            flex: 1;
+            overflow: auto;
+            background: white;
+        }
+
+        #preview-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .quick-tips {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 12px 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .quick-tips strong {
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎨 JSP Visual Preview</h1>
+        <p>Paste your JSP code to see the visual layout and styling instantly. All JSTL tags replaced with placeholder data. | <a href="index.html" style="color: #667eea; text-decoration: underline;">Full JSTL Mode →</a></p>
+        <p style="font-size: 0.85rem; color: #999; margin-top: 8px;">Created by: <strong style="color: #667eea;">Rohan Sharma</strong></p>
+    </div>
+
+    <div class="layout">
+        <div class="input-panel">
+            <h2>JSP Code</h2>
+            <textarea id="jsp-input" placeholder="Paste your JSP code here (including <style> tags)..."></textarea>
+            <div class="buttons">
+                <button class="btn-primary" onclick="renderVisual()">Preview</button>
+                <button class="btn-secondary" onclick="clearAll()">Clear</button>
+            </div>
+            <div class="quick-tips">
+                <strong>Tips:</strong>
+                - Include &lt;style&gt; tags from your JSP<br>
+                - JSTL tags auto-filled with sample data<br>
+                - Instant visual layout preview
+            </div>
+        </div>
+
+        <div class="preview-panel">
+            <div class="preview-header">
+                <span>Live Preview</span>
+                <span id="status" style="font-size: 0.85rem; opacity: 0.9;"></span>
+            </div>
+            <div class="preview-content">
+                <iframe id="preview-frame"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Visual-only JSP renderer - strips JSTL, keeps structure & CSS
+        function renderVisual() {
+            const jspCode = document.getElementById('jsp-input').value;
+            const status = document.getElementById('status');
+            
+            if (!jspCode.trim()) {
+                status.textContent = 'Please paste JSP code';
+                return;
+            }
+
+            try {
+                // Extract CSS
+                const styleMatches = jspCode.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
+                let extractedCSS = '';
+                if (styleMatches) {
+                    styleMatches.forEach(match => {
+                        const cssContent = match.replace(/<\/?style[^>]*>/gi, '');
+                        extractedCSS += cssContent + '\n';
+                    });
+                }
+
+                // Process JSP to static HTML
+                let html = jspCode;
+
+                // Remove JSP directives and comments
+                html = html.replace(/<%@[^%]*%>/g, '');
+                html = html.replace(/<%--[\s\S]*?--%>/g, '');
+                html = html.replace(/<%[^%]*%>/g, '');
+
+                // Replace JSTL tags with placeholder content
+                // <c:if> - keep content
+                html = html.replace(/<c:if[^>]*>([\s\S]*?)<\/c:if>/gi, '$1');
+                html = html.replace(/<core:if[^>]*>([\s\S]*?)<\/core:if>/gi, '$1');
+
+                // <c:forEach> - duplicate content 2-3 times for visual
+                html = html.replace(/<c:forEach[^>]*var=["']([^"']+)["'][^>]*>([\s\S]*?)<\/c:forEach>/gi, function(match, varName, content) {
+                    let result = '';
+                    for (let i = 1; i <= 2; i++) {
+                        result += content.replace(new RegExp('\\$\\{' + varName + '\\.', 'g'), '${item' + i + '.');
+                    }
+                    return result;
+                });
+                html = html.replace(/<core:forEach[^>]*var=["']([^"']+)["'][^>]*>([\s\S]*?)<\/core:forEach>/gi, function(match, varName, content) {
+                    let result = '';
+                    for (let i = 1; i <= 2; i++) {
+                        result += content.replace(new RegExp('\\$\\{' + varName + '\\.', 'g'), '${item' + i + '.');
+                    }
+                    return result;
+                });
+
+                // <c:choose/when/otherwise> - keep first when
+                html = html.replace(/<c:choose[^>]*>([\s\S]*?)<\/c:choose>/gi, function(match, content) {
+                    const whenMatch = content.match(/<c:when[^>]*>([\s\S]*?)<\/c:when>/i);
+                    return whenMatch ? whenMatch[1] : content;
+                });
+                html = html.replace(/<core:choose[^>]*>([\s\S]*?)<\/core:choose>/gi, function(match, content) {
+                    const whenMatch = content.match(/<core:when[^>]*>([\s\S]*?)<\/core:when>/i);
+                    return whenMatch ? whenMatch[1] : content;
+                });
+
+                // <c:out> - replace with placeholder
+                html = html.replace(/<c:out\s+value=["']([^"']+)["'][^>]*\/>/gi, function(match, expr) {
+                    return getPlaceholder(expr);
+                });
+                html = html.replace(/<core:out\s+value=["']([^"']+)["'][^>]*\/>/gi, function(match, expr) {
+                    return getPlaceholder(expr);
+                });
+
+                // Replace EL expressions with placeholders
+                html = html.replace(/\$\{([^}]+)\}/g, function(match, expr) {
+                    return getPlaceholder(expr);
+                });
+
+                // Clean up any remaining tags
+                html = html.replace(/<\/?c:[^>]*>/gi, '');
+                html = html.replace(/<\/?core:[^>]*>/gi, '');
+
+                // Build complete HTML document
+                const fullHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Preview</title>
+    <style>
+        body {
+            margin: 20px;
+            font-family: Arial, sans-serif;
+        }
+        ${extractedCSS}
+    </style>
+</head>
+<body>
+    ${html}
+</body>
+</html>
+                `;
+
+                // Render in iframe
+                const iframe = document.getElementById('preview-frame');
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                doc.open();
+                doc.write(fullHTML);
+                doc.close();
+
+                status.textContent = '✓ Rendered successfully';
+                setTimeout(() => { status.textContent = ''; }, 3000);
+
+            } catch (error) {
+                status.textContent = '⚠ Error: ' + error.message;
+                console.error('Render error:', error);
+            }
+        }
+
+        // Generate placeholder text based on expression
+        function getPlaceholder(expr) {
+            expr = expr.trim();
+            
+            // Common patterns
+            if (expr.includes('lastName')) return 'Doe';
+            if (expr.includes('firstName')) return 'John';
+            if (expr.includes('middleName')) return 'Michael';
+            if (expr.includes('name') && !expr.includes('Name')) return 'Sample Name';
+            if (expr.includes('ssn')) return '123-45-6789';
+            if (expr.includes('dob') || expr.includes('Date')) return '01/15/1990';
+            if (expr.includes('street') || expr.includes('Street')) return '123 Main Street';
+            if (expr.includes('city') || expr.includes('City')) return 'Austin';
+            if (expr.includes('state') || expr.includes('State')) return 'Texas';
+            if (expr.includes('zip')) return '78701';
+            if (expr.includes('county') || expr.includes('County')) return 'Travis';
+            if (expr.includes('country') || expr.includes('Country')) return 'United States';
+            if (expr.includes('phone') || expr.includes('Phone')) return '(512) 555-1234';
+            if (expr.includes('email') || expr.includes('Email')) return 'john.doe@example.com';
+            if (expr.includes('height') || expr.includes('Hgt')) return '5\' 10"';
+            if (expr.includes('weight') || expr.includes('Wgt')) return '175';
+            if (expr.includes('sex') || expr.includes('Sex')) return 'Male';
+            if (expr.includes('eye')) return 'Brown';
+            if (expr.includes('hair')) return 'Black';
+            if (expr.includes('race')) return 'White';
+            if (expr.includes('ethnicity')) return 'Not Hispanic';
+            if (expr.includes('dlId') || expr.includes('dlNumber')) return '12345678';
+            if (expr.includes('referenceNumber')) return 'REF-2024-001';
+            if (expr.includes('formType')) return 'DL-14A';
+            if (expr.includes('value') || expr.includes('Value')) return 'Active';
+            if (expr.includes('key')) return 'A';
+            
+            // Map lookups
+            if (expr.includes('[')) {
+                const keyMatch = expr.match(/\['([^']+)'\]/);
+                if (keyMatch) return keyMatch[1];
+            }
+            
+            // Date formatting
+            if (expr.includes('formatDate')) return '01/15/2024';
+            
+            // Default
+            return '[Data]';
+        }
+
+        function clearAll() {
+            document.getElementById('jsp-input').value = '';
+            const iframe = document.getElementById('preview-frame');
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write('<html><body style="display:flex;align-items:center;justify-content:center;height:100vh;color:#999;font-family:sans-serif;">Paste JSP code and click Preview</body></html>');
+            doc.close();
+            document.getElementById('status').textContent = '';
+        }
+
+        // Initialize empty state
+        clearAll();
+    </script>
+</body>
+</html>

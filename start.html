@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSP Preview - Choose Mode</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .modes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .mode-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .mode-card.recommended {
+            border: 3px solid #ffc107;
+            position: relative;
+        }
+
+        .mode-card.recommended::before {
+            content: "⭐ RECOMMENDED";
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #ffc107;
+            color: #333;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .mode-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .mode-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .mode-desc {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .mode-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .mode-features li {
+            padding: 5px 0;
+            color: #555;
+        }
+
+        .mode-features li::before {
+            content: "✓ ";
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .mode-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .mode-button:hover {
+            background: #5568d3;
+        }
+
+        .quick-links {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .quick-links h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .quick-links a {
+            display: inline-block;
+            margin: 5px 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .quick-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 JSP Preview Tool</h1>
+            <p>Preview your JSP layouts and styling instantly - no server needed</p>
+        </div>
+
+        <div class="modes">
+            <!-- Visual Mode -->
+            <a href="visual-mode.html" class="mode-card recommended">
+                <div class="mode-icon">🎨</div>
+                <div class="mode-title">Visual Mode</div>
+                <div class="mode-desc">
+                    Quick visual preview - paste JSP code and see styled layout instantly. 
+                    Perfect for CSS testing and layout verification.
+                </div>
+                <ul class="mode-features">
+                    <li>Instant visual preview</li>
+                    <li>Auto-fill JSTL tags</li>
+                    <li>CSS extraction</li>
+                    <li>Zero configuration</li>
+                </ul>
+                <div class="mode-button">Start Visual Mode →</div>
+            </a>
+
+            <!-- Full Mode -->
+            <a href="index.html" class="mode-card">
+                <div class="mode-icon">⚙️</div>
+                <div class="mode-title">Full Mode</div>
+                <div class="mode-desc">
+                    Complete JSTL preview with custom mock data. Test actual tag behavior 
+                    and EL expressions with JSON data.
+                </div>
+                <ul class="mode-features">
+                    <li>JSTL logic testing</li>
+                    <li>Custom mock data (JSON)</li>
+                    <li>EL expression evaluation</li>
+                    <li>Export rendered HTML</li>
+                </ul>
+                <div class="mode-button">Start Full Mode →</div>
+            </a>
+        </div>
+
+        <div class="quick-links">
+            <h3>📖 Documentation</h3>
+            <a href="QUICKSTART.md" target="_blank">Quick Start Guide</a>
+            <a href="README.md" target="_blank">Full Documentation</a>
+            <a href="#" onclick="alert('This is a browser-based tool. Just open the HTML files!'); return false;">How to Use</a>
+        </div>
+    </div>
+</body>
+</html>
